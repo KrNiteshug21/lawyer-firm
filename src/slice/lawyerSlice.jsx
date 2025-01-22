@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = [
   {
     id: 1,
+    img: "/img/ashton-bingham-EQFtEzJGERg-unsplash.jpg",
     name: "John Doe",
     speciality: "Divorce",
     availability: [],
@@ -11,14 +12,16 @@ const initialState = [
   },
   {
     id: 2,
-    name: "Emily Clark",
+    img: "/img/harps-joseph-tAvpDE7fXgY-unsplash.jpg",
+    name: "Marhsal Quast",
     speciality: "Criminal",
     availability: [],
-    cost: 100,
+    cost: 150,
     rating: 4.6,
   },
   {
     id: 3,
+    img: "/img/warren-VVEwJJRRHgk-unsplash.jpg",
     name: "Michael Brown",
     speciality: "Property Dispute",
     availability: [],
@@ -26,7 +29,8 @@ const initialState = [
     rating: 4.9,
   },
   {
-    id: 3,
+    id: 4,
+    img: "/img/sabrina-may-iuJClDf7S-M-unsplash.jpg",
     name: "Sophia Mertinez",
     speciality: "Corporate",
     availability: [],
@@ -35,11 +39,21 @@ const initialState = [
   },
   {
     id: 5,
+    img: "/img/marshal-quast-IV46f_H9PXw-unsplash.jpg",
     name: "Alice Smith",
     speciality: "Immigration",
     availability: [],
     cost: 280,
     rating: 4.2,
+  },
+  {
+    id: 6,
+    img: "/img/christopher-campbell-rDEOVtE7vOs-unsplash.jpg",
+    name: "Sabrina Campbell",
+    speciality: "Civil",
+    availability: [],
+    cost: 300,
+    rating: 4.4,
   },
 ];
 

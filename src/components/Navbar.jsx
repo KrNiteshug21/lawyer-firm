@@ -9,7 +9,7 @@ const Navbar = () => {
         <div className="text-xl">
           <Link to={"/"}>Lawyer Firm</Link>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Link className="hover:bg-slate-700 px-2 py-1 rounded-md" to="/">
             Home
           </Link>
