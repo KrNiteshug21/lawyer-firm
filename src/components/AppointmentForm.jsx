@@ -6,16 +6,6 @@ import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { updateAvailability } from "@/slice/lawyerSlice";
 
-const init = {
-  lawyerId: null,
-  lawyerName: "",
-  clientName: "",
-  slot: "",
-  date: null,
-  fee: "null",
-  status: "Upcoming",
-};
-
 const timeSlots = [
   "09.00",
   "09.30",
@@ -36,6 +26,15 @@ const timeSlots = [
 ];
 
 const AppointmentForm = ({ lawyer }) => {
+  const init = {
+    lawyerId: null,
+    lawyerName: "",
+    clientName: "",
+    slot: "",
+    selectedDate: format(new Date(), "dd-MM-yyyy"),
+    fee: "null",
+    status: "Upcoming",
+  };
   const [appointmentData, setAppointmentData] = useState(init);
   const [date, setDate] = useState(null);
   const dispatch = useDispatch();
@@ -68,20 +67,29 @@ const AppointmentForm = ({ lawyer }) => {
       return;
     }
 
-    const newDate = format(date, "dd/MM/yyyy");
-    setAppointmentData({
-      ...appointmentData,
-      date: newDate,
-    });
+    const newDate = format(date, "dd-MM-yyyy");
 
-    dispatch(addAppointment(appointmentData));
+    const updatedData = {
+      ...appointmentData,
+      selectedDate: format(date, "dd-MM-yyyy"),
+    };
+
+    setAppointmentData(updatedData);
+
+    console.log("newDate", newDate);
+    console.log("date", date);
+    console.log("updatedData", updatedData);
+
+    dispatch(addAppointment(updatedData));
     dispatch(
       updateAvailability({
         lawyerId: lawyer.id,
-        date: appointmentData.date,
-        time: appointmentData.slot,
+        date: updatedData.selectedDate,
+        time: updatedData.slot,
       })
     );
+    setAppointmentData(init);
+    setDate(null);
   };
 
   return (
@@ -99,22 +107,39 @@ const AppointmentForm = ({ lawyer }) => {
         <DatePicker date={date} setDate={setDate} />
       </div>
 
-      <div className={`flex flex-wrap items-center gap-4`}>
-        {timeSlots.map((slot, index) => (
-          <div
-            className="flex flex-auto items-center space-x-2 bg-gray-100 hover:bg-slate-800 p-2 rounded-md hover:text-white cursor-pointer"
-            key={index}
-          >
-            <input
-              type="radio"
-              id={slot}
-              name="slot"
-              value={slot}
-              onChange={handleChange}
-            />
-            <label htmlFor={slot}>{slot}</label>
-          </div>
-        ))}
+      <div>
+        <h2 className="font-semibold text-lg">Choose slot</h2>
+        <div
+          className={`grid grid-cols-4 whitespace-break-spaces md:grid-cols-8 gap-2`}
+        >
+          {timeSlots.map((slot) => {
+            const isSlotBooked = Boolean(
+              date != null
+                ? lawyer.availability[date]?.find((time) => slot === time)
+                : false
+            );
+            return (
+              <div
+                className={`flex justify-center flex-auto items-center space-x-2 ${
+                  isSlotBooked
+                    ? "bg-red-600 cursor-not-allowed text-gray-300"
+                    : "bg-gray-100 hover:bg-slate-800 hover:text-white"
+                }   p-2 rounded-md  cursor-pointer`}
+                key={slot}
+              >
+                <input
+                  type="radio"
+                  id={slot}
+                  name="slot"
+                  value={slot}
+                  onChange={handleChange}
+                  disabled={isSlotBooked}
+                />
+                <label htmlFor={slot}>{slot}</label>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <Button onClick={handleSubmit} className={"w-max px-8"}>

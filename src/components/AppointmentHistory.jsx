@@ -2,7 +2,6 @@ import React from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -16,7 +15,6 @@ const AppointmentHistory = () => {
 
   return (
     <Table>
-      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
       <TableHeader>
         <TableRow>
           <TableHead>Lawyer</TableHead>
@@ -28,10 +26,10 @@ const AppointmentHistory = () => {
       </TableHeader>
       <TableBody>
         {appointments.map((data) => (
-          <TableRow>
+          <TableRow key={data.id}>
             <TableCell>{data.lawyerName}</TableCell>
             <TableCell>{data.clientName}</TableCell>
-            <TableCell>{data.date}</TableCell>
+            <TableCell className={"text-left"}>{data.selectedDate}</TableCell>
             <TableCell>{data.slot}</TableCell>
             <TableCell>₹ {data.fee}</TableCell>
           </TableRow>

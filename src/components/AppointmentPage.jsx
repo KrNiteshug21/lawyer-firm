@@ -12,6 +12,8 @@ const AppointmentPage = () => {
   const { id } = useParams();
   const lawyers = useSelector((state) => state.lawyers);
   const lawyer = lawyers.find((l) => l.id.toString() === id);
+  console.log("lawyer", lawyer);
+
   const [toggleAppointment, setToggleAppointment] = useState(false);
 
   const handleClick = () => {

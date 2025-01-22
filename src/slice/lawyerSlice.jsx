@@ -6,7 +6,7 @@ const initialState = [
     img: "/img/ashton-bingham-EQFtEzJGERg-unsplash.jpg",
     name: "John Doe",
     speciality: "Divorce",
-    availability: [],
+    availability: {},
     cost: 200,
     rating: 4.8,
   },
@@ -15,7 +15,7 @@ const initialState = [
     img: "/img/harps-joseph-tAvpDE7fXgY-unsplash.jpg",
     name: "Marhsal Quast",
     speciality: "Criminal",
-    availability: [],
+    availability: {},
     cost: 150,
     rating: 4.6,
   },
@@ -24,7 +24,7 @@ const initialState = [
     img: "/img/warren-VVEwJJRRHgk-unsplash.jpg",
     name: "Michael Brown",
     speciality: "Property Dispute",
-    availability: [],
+    availability: {},
     cost: 300,
     rating: 4.9,
   },
@@ -33,7 +33,7 @@ const initialState = [
     img: "/img/sabrina-may-iuJClDf7S-M-unsplash.jpg",
     name: "Sophia Mertinez",
     speciality: "Corporate",
-    availability: [],
+    availability: {},
     cost: 180,
     rating: 4.5,
   },
@@ -42,7 +42,7 @@ const initialState = [
     img: "/img/marshal-quast-IV46f_H9PXw-unsplash.jpg",
     name: "Alice Smith",
     speciality: "Immigration",
-    availability: [],
+    availability: {},
     cost: 280,
     rating: 4.2,
   },
@@ -51,7 +51,7 @@ const initialState = [
     img: "/img/christopher-campbell-rDEOVtE7vOs-unsplash.jpg",
     name: "Sabrina Campbell",
     speciality: "Civil",
-    availability: [],
+    availability: {},
     cost: 300,
     rating: 4.4,
   },
@@ -65,7 +65,10 @@ const lawyerSlice = createSlice({
       const { lawyerId, date, time } = action.payload;
       const lawyer = state.find((lawyer) => lawyer.id === lawyerId);
       if (lawyer) {
-        lawyer.availability[date] = lawyer.availability[date].push(time);
+        if (!lawyer.availability[date]) {
+          lawyer.availability[date] = [];
+        }
+        lawyer.availability[date].push(time);
       }
     },
   },
