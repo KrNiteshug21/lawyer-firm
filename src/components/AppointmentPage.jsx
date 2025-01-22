@@ -4,14 +4,19 @@ import { useParams } from "react-router";
 import SectionWrapper from "./SectionWrapper";
 import { Badge } from "./ui/badge";
 import { IndianRupee, Star, User } from "lucide-react";
-import { DatePicker } from "./ui/DatePicker";
+import { Button } from "./ui/button";
+import AppointmentForm from "./AppointmentForm";
 
 const AppointmentPage = () => {
   const { id } = useParams();
   const lawyers = useSelector((state) => state.lawyers);
   const lawyer = lawyers.find((l) => l.id.toString() === id);
-  const [date, setDate] = useState();
   // const slots = date && lawyers.availability[date];
+  const [toggleAppointment, setToggleAppointment] = useState(false);
+
+  const handleClick = () => {
+    setToggleAppointment(!toggleAppointment);
+  };
 
   return (
     <div>
@@ -44,26 +49,28 @@ const AppointmentPage = () => {
           </div>
         </div>
 
-        <form className="flex flex-col gap-4 my-6 w-96 min-h-screen">
-          <h2 className="font-semibold text-xl">Appointment</h2>
-          <input
-            className="border-2 p-2 rounded-md w-full sm:w-96 outline-none"
-            name="name"
-            type="text"
-            placeholder="Full Name..."
-          />
-          <DatePicker date={date} setDate={setDate} />
-          <div className="flex flex-wrap gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((slot) => (
-              <div
-                className="bg-neutral-200 hover:bg-blue-600 p-2 rounded hover:text-white transition duration-150"
-                key={slot}
-              >
-                10.00
-              </div>
-            ))}
+        <div className="space-y-4 my-6">
+          <h2 className="font-semibold text-3xl">
+            Lawyer Appointment Management
+          </h2>
+
+          <div className="space-x-2 bg-gray-300 p-2 rounded-md w-max">
+            <Button
+              onClick={handleClick}
+              variant={toggleAppointment ? "secondary" : "default"}
+            >
+              Book Appoinment
+            </Button>
+            <Button
+              onClick={handleClick}
+              variant={toggleAppointment ? "default" : "secondary"}
+            >
+              Appointment History
+            </Button>
           </div>
-        </form>
+
+          <AppointmentForm />
+        </div>
       </SectionWrapper>
     </div>
   );
