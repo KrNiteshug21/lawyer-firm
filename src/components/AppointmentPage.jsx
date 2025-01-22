@@ -6,12 +6,12 @@ import { Badge } from "./ui/badge";
 import { IndianRupee, Star, User } from "lucide-react";
 import { Button } from "./ui/button";
 import AppointmentForm from "./AppointmentForm";
+import AppointmentHistory from "./AppointmentHistory";
 
 const AppointmentPage = () => {
   const { id } = useParams();
   const lawyers = useSelector((state) => state.lawyers);
   const lawyer = lawyers.find((l) => l.id.toString() === id);
-  // const slots = date && lawyers.availability[date];
   const [toggleAppointment, setToggleAppointment] = useState(false);
 
   const handleClick = () => {
@@ -49,7 +49,7 @@ const AppointmentPage = () => {
           </div>
         </div>
 
-        <div className="space-y-4 my-6">
+        <div className="space-y-4 my-10 min-h-screen">
           <h2 className="font-semibold text-3xl">
             Lawyer Appointment Management
           </h2>
@@ -69,7 +69,11 @@ const AppointmentPage = () => {
             </Button>
           </div>
 
-          <AppointmentForm />
+          {toggleAppointment ? (
+            <AppointmentHistory />
+          ) : (
+            <AppointmentForm lawyer={lawyer} />
+          )}
         </div>
       </SectionWrapper>
     </div>

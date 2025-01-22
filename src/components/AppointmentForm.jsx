@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatePicker } from "./ui/DatePicker";
-import { Label } from "./ui/label";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Button } from "./ui/button";
+import { addAppointment } from "@/slice/appointmentSlice";
+import { format } from "date-fns";
+import { useDispatch } from "react-redux";
+import { updateAvailability } from "@/slice/lawyerSlice";
 
 const init = {
   lawyerId: null,
   lawyerName: "",
   clientName: "",
   slot: "",
-  fee: null,
+  date: null,
+  fee: "null",
   status: "Upcoming",
 };
 
@@ -27,43 +31,95 @@ const timeSlots = [
   "15.00",
   "17.00",
   "17.30",
+  "18.00",
+  "18.30",
 ];
 
-const AppointmentForm = () => {
+const AppointmentForm = ({ lawyer }) => {
   const [appointmentData, setAppointmentData] = useState(init);
-  const [date, setDate] = useState();
-  const handleClick = (e) => {
+  const [date, setDate] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setAppointmentData({
+      ...appointmentData,
+      lawyerId: lawyer.id,
+      lawyerName: lawyer.name,
+      fee: lawyer.cost,
+    });
+  }, []);
+
+  const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+    console.log(name + " : " + value);
     setAppointmentData({ ...appointmentData, [name]: value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!appointmentData.clientName || !date || !appointmentData.slot) {
+      alert("Fill all fields!");
+      return;
+    }
+
+    if (!(date instanceof Date) || isNaN(date)) {
+      alert("Invalid Date!");
+      return;
+    }
+
+    const newDate = format(date, "dd/MM/yyyy");
+    setAppointmentData({
+      ...appointmentData,
+      date: newDate,
+    });
+
+    dispatch(addAppointment(appointmentData));
+    dispatch(
+      updateAvailability({
+        lawyerId: lawyer.id,
+        date: appointmentData.date,
+        time: appointmentData.slot,
+      })
+    );
+  };
+
   return (
-    <form className="flex flex-col gap-4 w-96">
-      <input
-        className="border-2 p-2 rounded-md w-full sm:w-96 outline-none"
-        name="name"
-        type="text"
-        placeholder="Full Name..."
-        value={appointmentData.clientName}
-      />
-      <DatePicker date={date} setDate={setDate} />
-      <RadioGroup className={"flex flex-wrap gap-4"} defaultValue="option-one">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((slot) => (
+    <form className="flex flex-col gap-4 text-slate-900">
+      <div className="flex items-center gap-4">
+        <input
+          className="border-1 p-2 rounded-md w-full outline-none"
+          name="clientName"
+          type="text"
+          placeholder="Full Name..."
+          value={appointmentData.clientName}
+          onChange={handleChange}
+        />
+
+        <DatePicker date={date} setDate={setDate} />
+      </div>
+
+      <div className={`flex flex-wrap items-center gap-4`}>
+        {timeSlots.map((slot, index) => (
           <div
-            key={slot}
-            className="flex items-center space-x-2 bg-gray-300 hover:bg-blue-600 p-2 rounded-md hover:text-white cursor-pointer"
+            className="flex flex-auto items-center space-x-2 bg-gray-100 hover:bg-slate-800 p-2 rounded-md hover:text-white cursor-pointer"
+            key={index}
           >
-            <RadioGroupItem
-              name={"fee"}
-              onChange={handleClick}
-              value={slot}
+            <input
+              type="radio"
               id={slot}
+              name="slot"
+              value={slot}
+              onChange={handleChange}
             />
-            <Label htmlFor={slot}>10.00</Label>
+            <label htmlFor={slot}>{slot}</label>
           </div>
         ))}
-      </RadioGroup>
+      </div>
+
+      <Button onClick={handleSubmit} className={"w-max px-8"}>
+        Submit
+      </Button>
     </form>
   );
 };
